@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOUDOU乐队性格测试 - 探寻生命中留住的瞬间</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide 图标库 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400&display=swap');
+        
+        body {
+            background-color: #0d0221;
+            color: #f3e8ff;
+            font-family: 'Noto Sans SC', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .glass {
+            background: rgba(26, 11, 46, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-900/20 blur-[120px] rounded-full"></div>
+    </div>
+
+    <div id="app" class="relative z-10 w-full max-w-lg">
+        <!-- 初始页面 -->
+        <div id="start-screen" class="text-center space-y-12 fade-in">
+            <div class="space-y-6">
+                <div class="flex justify-center mb-8">
+                    <div class="p-4 border border-purple-500/30 rounded-full animate-pulse">
+                        <i data-lucide="sparkles" class="w-12 h-12 text-purple-400"></i>
+                    </div>
+                </div>
+                <h1 class="text-5xl font-serif tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-purple-100 to-purple-500 py-2">
+                    DOUTI
+                </h1>
+                <p class="text-purple-300/60 tracking-[0.5em] text-xs uppercase">探寻生命中无法留住的瞬间</p>
+            </div>
+            <button onclick="startQuiz()" class="group relative px-16 py-5 bg-transparent border border-purple-500/50 hover:border-purple-300 transition-all duration-500">
+                <span class="relative tracking-[0.8em] flex items-center gap-2 text-sm">
+                    开启仪式 <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </span>
+            </button>
+        </div>
+
+        <!-- 答题页面 -->
+        <div id="quiz-screen" class="hidden fade-in">
+            <div class="glass p-8 rounded-2xl shadow-2xl min-h-[580px] flex flex-col">
+                <div class="flex justify-between items-center mb-10">
+                    <button id="back-btn" onclick="handleBack()" class="p-2 text-purple-400 hover:text-purple-200 transition-colors">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <span id="progress-text" class="text-[10px] tracking-[0.4em] text-purple-400/60 uppercase">1 / 12</span>
+                    <div class="w-4 h-4 rounded-full border border-purple-500/30 border-t-purple-500 animate-spin"></div>
+                </div>
+                
+                <h2 id="question-text" class="text-xl mb-auto font-serif leading-relaxed text-purple-100"></h2>
+
+                <div id="options-container" class="space-y-4 mt-8">
+                    <!-- 选项由 JS 动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 结果页面 -->
+        <div id="result-screen" class="hidden fade-in">
+            <div class="glass p-10 rounded-3xl shadow-2xl text-center space-y-8">
+                <div class="space-y-3">
+                    <p class="text-[10px] tracking-[0.6em] text-purple-400/70 uppercase">共鸣的结果</p>
+                    <h2 id="result-title" class="text-5xl font-serif text-white"></h2>
+                </div>
+
+                <div class="py-10 border-y border-purple-500/20">
+                    <p id="result-lyrics" class="italic text-purple-200/90 text-lg leading-relaxed font-serif"></p>
+                </div>
+
+                <div class="text-left bg-white/5 p-6 rounded-2xl border border-purple-500/10">
+                    <h3 class="text-[10px] tracking-widest text-purple-400/50 uppercase mb-3">性格图谱</h3>
+                    <p id="result-analysis" class="text-sm leading-7 text-purple-100/70 font-light"></p>
+                </div>
+
+                <div class="flex flex-col gap-4 pt-4">
+                    <a id="music-link" href="#" target="_blank" class="hidden flex items-center justify-center gap-3 py-4 bg-purple-700 text-white rounded-full text-sm tracking-widest hover:bg-purple-600 transition-all">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> 在网易云打开
+                    </a>
+                    <button onclick="location.reload()" class="text-purple-400/60 text-xs tracking-widest flex items-center justify-center gap-2 py-2">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> 重新开启仪式
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化图标
+        lucide.createIcons();
+
+        // 配置数据
+        const QUESTIONS = [
+            { id: 1, text: "当你在深夜听到一阵遥远的钟声，你的第一反应是？", options: [
+                { text: "静静聆听，感受钟声带来的孤独感", scores: { I: 2, N: 1 } },
+                { text: "寻找声音来源，想分享给朋友", scores: { E: 2, S: 1 } },
+                { text: "思考钟声的物理节奏与逻辑", scores: { T: 2, J: 1 } },
+                { text: "联想到某种命运的启示或征兆", scores: { N: 2, F: 1 } }
+            ]},
+            { id: 2, text: "如果生命是一场祭祀，你认为最重要的祭品是？", options: [
+                { text: "过往的记忆与时间", scores: { S: 2, J: 1 } },
+                { text: "未完成的愿望与理想", scores: { N: 2, P: 1 } },
+                { text: "纯粹的情感与眼泪", scores: { F: 2, I: 1 } },
+                { text: "坚定的信仰与法则", scores: { T: 2, J: 1 } }
+            ]},
+            { id: 3, text: "下面几种味道中，哪一种最触动你？", options: [
+                { text: "淡雅苦涩的茉莉花茶，像清晨的一场初醒", scores: { I: 2, T: 1, J: 1 } },
+                { text: "火把燃烧时焦灼的松木香，像旷野里的狂奔", scores: { E: 1, S: 2, P: 1 } },
+                { text: "古老寺院中萦绕的檀香，像永恒的一场静止", scores: { I: 2, N: 2, J: 1 } },
+                { text: "花海盛开处迷人的芬芳，像盛夏里的一场幻梦", scores: { E: 1, N: 1, F: 2, P: 1 } }
+            ]},
+            { id: 4, text: "如果对爱人说一句话，你会选？", options: [
+                { text: "就现在奔向你，然后抱紧你", scores: { I: 2, T: 1, J: 1 } },
+                { text: "春天啊暖阳啊快些来吧，保全ta一路上无风无浪", scores: { E: 1, S: 2, P: 1 } },
+                { text: "你说别爱啊，又依依不舍", scores: { I: 2, N: 2, J: 1 } },
+                { text: "在天亮之前，请提前原谅我，好吗", scores: { E: 1, N: 1, F: 2, P: 1 } }
+            ]},
+            { id: 5, text: "若要为你的灵魂挑选一种音色，它听起来会是？", options: [
+                { text: "低沉轰鸣的大鼓，像大地深处沉稳的律动", scores: { S: 2, J: 1, T: 1 } },
+                { text: "华丽流淌的竖琴，像月光洒落在永恒的湖面", scores: { N: 2, F: 1, I: 1 } },
+                { text: "清脆肃穆的超度铃，像穿透因果的一声长叹", scores: { I: 2, N: 2, J: 1 } },
+                { text: "悠扬跳脱的竖笛，像穿行林间那不羁的风", scores: { E: 1, P: 2, N: 1 } }
+            ]},
+            { id: 6, text: "若能化作一缕神识远行，哪一种景观最让你心生向往？", options: [
+                { text: "南三环东路的车水马龙，在明暗交替间吞吐烟火", scores: { S: 2, E: 1, J: 1 } },
+                { text: "风暴将至前的木星边缘，在极致的压抑中静待破碎", scores: { N: 2, I: 2, T: 1 } },
+                { text: "燕子归来时的灿烂花海，在温柔的轮回里重塑旧梦", scores: { F: 2, S: 1, J: 1 } },
+                { text: "白马尽情奔驰的无垠原野，在生命力里寻找纯真", scores: { P: 2, E: 2, N: 1 } }
+            ]},
+            { id: 7, text: "当《超度我》的旋律响起，你最想洗净自己灵魂中的哪一种执念？", options: [
+                { text: "那一丝总是挥之不去的、软弱的迟疑", scores: { T: 2, J: 1 } },
+                { text: "对现实琐碎事物的过度沉溺与焦虑", scores: { N: 2, P: 1 } },
+                { text: "渴望被所有人理解的那份虚荣心", scores: { I: 2, F: 1 } },
+                { text: "对这个世界不再抱有好奇的麻木感", scores: { E: 2, N: 1, F: 1 } }
+            ]},
+            { id: 8, text: "若要挑选一句歌词作为你生命观的注脚，你会选择？", options: [
+                { text: "“我徒有手脚一双，却扛不起这天杀的大旗”", scores: { S: 2, T: 1, J: 2 } },
+                { text: "“因为享受着它的灿烂，因为忍受着它的腐烂”", scores: { N: 2, F: 2, P: 1 } },
+                { text: "“我是混世孽障活得坦荡，你快点躲开别挡了我的光”", scores: { E: 2, P: 2, T: 1 } },
+                { text: "“我这卑微又易碎的身躯，迎着真相而上咯”", scores: { I: 2, N: 2, J: 1 } }
+            ]},
+            { id: 9, text: "你在梦中见到了一扇通往远古的窄门，门缝里溢出的是？", options: [
+                { text: "经年累月的灰尘，混合着腐朽而迷人的书卷气", scores: { S: 1, J: 2, T: 1 } },
+                { text: "刺眼的白光，仿佛能将一切过往瞬间蒸发", scores: { N: 2, P: 1 } },
+                { text: "故人模糊的呼唤，带着潮湿的泥土清香", scores: { F: 2, I: 1 } },
+                { text: "金属碰撞的冷冽回响，如同某种宿命的宣判", scores: { T: 2, N: 1, J: 1 } }
+            ]},
+            { id: 10, text: "如果你的心碎是有形状的，它看起来最像？", options: [
+                { text: "散落一地的琉璃瓦，折射着支离破碎的光影", scores: { N: 1, F: 2, I: 1 } },
+                { text: "干枯龟裂的大地，沉默地承受着太阳的暴晒", scores: { S: 2, T: 1, J: 1 } },
+                { text: "不断向中心塌陷的黑洞，无声地吞噬着周遭", scores: { N: 2, I: 2, T: 1 } },
+                { text: "被狂风吹乱的经幡，在高处徒劳地猎猎作响", scores: { E: 1, P: 2, F: 1 } }
+            ]},
+            { id: 11, text: "置身于一场盛大的幻觉中，你最不忍心戳破的是？", options: [
+                { text: "此刻的安宁与圆满，哪怕它是虚假的虚荣", scores: { J: 2, S: 1 } },
+                { text: "那双依然注视着你的、充满希冀的眼睛", scores: { F: 2, E: 1 } },
+                { text: "万物生长的法则，尽管其残酷而美丽", scores: { T: 2, N: 1 } },
+                { text: "那股随时准备叛逃、奔向未知的冲动", scores: { P: 2, N: 2 } }
+            ]},
+            { id: 12, text: "当音乐最后的一声余音消失，你最深刻的体悟是？", options: [
+                { text: "一切都是一场徒劳，但我们曾如此真切地活过", scores: { N: 1, F: 1, P: 2 } },
+                { text: "告别是生命中唯一的永恒，我们只需学会接受", scores: { J: 2, S: 1, I: 1 } },
+                { text: "真相隐没在沉默中，比任何词句都更有力量", scores: { I: 2, T: 2, N: 1 } },
+                { text: "下一次的重逢，早已写在这次离别的伏笔里", scores: { E: 1, N: 2, F: 1 } }
+            ]}
+        ];
+
+        const RESULTS = {
+            "INFJ": { title: "《南三环东路》", lyrics: "污泥啊，血肉啊，石头和大地也是你啊", analysis: "你是温良的守望者。你的灵魂里藏着一种慈悲，懂得“苦衷”的重量。在时间的河流里，你总是倾向于在怀念中寻找前行的力量。", link: "https://music.163.com/song?id=2052454512&uct2=U2FsdGVkX1+fcPp3TADl8fbcv/HcjABIIhJ4I6iNIHg=" },
+            "INFP": { title: "《如何》", lyrics: "像一颗流星划过天际，像一颗砂砾沉入海底", analysis: "你是荒原上最敏感的诗人。你的世界构建在极其私密的感官之上，那些未被说出口的歌词，才是你最真实的独白。你总能在破碎中嗅出一种异样的美。", link: "https://music.163.com/song?id=1818820554&uct2=U2FsdGVkX1802jrfpZjEQuhQyoot+KsXlE9sANr0C1I=" },
+            "ENFJ": { title: "《FEARLESS》", lyrics: "抬头看看啊，我不是孤星一颗", analysis: "你是坚定的理想主义者。你深知孤独的滋味，却永远不甘于成为“孤星”。在人际的旷野中，你总是在寻找并创造一种能将众生联结在一起的热望。", link: "https://music.163.com/song?id=1495719804&uct2=U2FsdGVkX1+rdIUzQscRvLty0Ki1awHzg87XHGxNP5o=" },
+            "ENFP": { title: "《嗵嗵》", lyrics: "来狂欢吧狂欢吧，永远不下坠", analysis: "你是永远热情的造梦者。你的生命逻辑是向上俯冲，拒绝在平庸中下坠。你渴望一场永不散场的狂欢，并在每一个鼓点里确认自己存在的意义。", link: "https://music.163.com/song?id=2712247628&uct2=U2FsdGVkX18OLfnkcXfHQRLwl//4n8lmppF1fHWHmlo=" },
+            "INTJ": { title: "《兰若度母》", lyrics: "众生万过皆因果，本是无争无灾祸", analysis: "你是清醒的觉察者。你相信“因果”的铁律，有着超然物外的理智。当你洞穿了“无争无灾”的本质后，你的每一步都走得极其精准且带着神圣的冷冽。", link: "https://music.163.com/song?id=1818820555&uct2=U2FsdGVkX1949yeWx51FstAFFajpW4wDOZMjCVDE3TE=" },
+            "INTP": { title: "《荒唐谣》", lyrics: "要烈火也要月光，烦请你了歌唱吧", analysis: "你是纯粹的思想者。你的一生都在试图调和“烈火”般的真相与“月光”般的虚幻。你不需要观众，只需在逻辑的歌唱中完成自我观测。", link: "https://music.163.com/song?id=3368793123&uct2=U2FsdGVkX18yJMUyfzF64od80/foOG6vcDb86bLOg4I=" },
+            "ENTJ": { title: "《超度我》", lyrics: "我把红线折折剪剪，落入凡间镜重圆", analysis: "你是果决的掌控者。你拥有修剪命运、整合破碎的意志。无论凡间如何杂乱，你始终相信可以靠自己的手脚，将残缺的生活重新拼凑成圆。", link: "https://music.163.com/song?id=1818820552&uct2=U2FsdGVkX1+hWZyyxAzcoOZ9BOXbmvmtpdm0JnXbtiM=" },
+            "ENTP": { title: "《心静自然凉》", lyrics: "我怒火中烧八百丈，你给我块糖我就自然凉", analysis: "你是戏谑的观察家。你用“怒火”消解严肃，又能在最戏剧性的时刻被一颗“糖”治愈。这种举重若轻的灵活，让你在任何困境下都能笑对荒诞。", link: "https://music.163.com/song?id=1818820556&uct2=U2FsdGVkX1+yRlo3XKuW1PdgL+RBLTl/x8I1G46qGwo=" },
+            "ISFJ": { title: "《马》", lyrics: "春天啊暖阳啊快些来吧 保全他一路上无风无浪", analysis: "你是沉默的守护者。你的爱意总是具象为“暖阳”与“保全”。你愿意付出极大的耐心，去抵御世界带给他人的风浪，在细碎的关怀中确立自我价值。", link: "https://music.163.com/song?id=1818819579&uct2=U2FsdGVkX1+10OHcZxk2lR9PGgfkWpHpTs1qe3Zotks=" },
+            "ISTJ": { title: "《春夏秋冬》", lyrics: "随着风随着雪随着花，随着星随着月随着她", analysis: "你是时序的忠实信徒。你相信“随着”的秩序感，在四季轮回中找寻恒常。你并不追求瞬间的爆发，而是希望在细水长流中承托住生命的底色。", link: "https://music.163.com/song?id=2613680870&uct2=U2FsdGVkX19QhJH1PDHPIxKRNMQHsjjuQur0pZelybg=" },
+            "ESFJ": { title: "《春暖花开去见你》", lyrics: "等到春暖艳阳天，你我就相见", analysis: "你是温暖的行动派。所有的等待都是为了那个“相见”的约定。你重视社会契约与情感联结，在春暖花开的圆满中，你能获得最踏实的安全感。", link: "https://music.163.com/song?id=1818820553&uct2=U2FsdGVkX1+cFpSEuR68hlQCX1AoCqc9xKyZgrbN+W0=" },
+            "ESTJ": { title: "《没咯》", lyrics: "我只要一双流泪的眼睛，看清我一路上所有罪过", analysis: "你是严苛的反思者。你并不惧怕“没咯”的虚无，你更害怕看不清自己的路径。那种对是非黑白的绝对要求，让你在纷繁世俗中始终保持着清澈的原则。", link: "https://music.163.com/song?id=1818820551&uct2=U2FsdGVkX18azOSdh7CvN4fSVYxmq16iZUuvbQHiGog=" },
+            "ISFP": { title: "《小小的眼泪》", lyrics: "只有你知晓的眼泪，从青空之上落下", analysis: "你是隐秘的艺术家。你对情感有着极强的共情，却只在“知晓”的一瞬间流露。你懂得“青空”之下的孤独，那是独属于你自己的极致感官体验。", link: "https://music.163.com/song?id=3312282300&uct2=U2FsdGVkX1819lx2dSpBQp023SkaigGW37S4ELd6UTA=" },
+            "ISTP": { title: "《可你听见了》", lyrics: "把天生的吝啬梦里的大火，赐予我求之不得", analysis: "你是冷酷的实干家。你将“梦里的大火”转化为现实的能量。你不需要过多的语言，当你意识到那些“求之不得”的真相时，你会用最直接的方式突围。", link: "https://music.163.com/song?id=2605274338&uct2=U2FsdGVkX19cL2Fy5ehwliss59Y3Dvh2EU/d3wT9e50=" },
+            "ESFP": { title: "《我用什么把你留住》", lyrics: "你一定要看到花开，你一定等燕子归来", analysis: "你是生命的热爱者。你追求极致的生机，“花开”与“燕归”是你活着的证据。哪怕最终无法留住任何东西，你也要在那个灿烂的过程中燃尽所有。", link: "https://music.163.com/song?id=1818819577&uct2=U2FsdGVkX1++DDp1GRI+I1GcqWSlQpXzPGz318fJXRI=" },
+            "ESTP": { title: "《最终观测》", lyrics: "我破碎的心脏，曾温柔地震荡", analysis: "你是勇敢的冒险家。你直面风暴，并将其视为一种归途。你习惯在各种感官的极限挑战中寻找自我，生命对你而言，就是一场最终的观测之旅。", link: "https://music.163.com/song?id=2093895545&uct2=U2FsdGVkX187DSORNT88URYU7AFtevfTXvoWakDj8jQ=" }
+        };
+
+        // 状态变量
+        let currentIdx = 0;
+        let userScores = { I: 0, E: 0, N: 0, S: 0, F: 0, T: 0, J: 0, P: 0 };
+        let history = [];
+
+        // 切换屏幕
+        function showScreen(id) {
+            ['start-screen', 'quiz-screen', 'result-screen'].forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        // 开始测试
+        function startQuiz() {
+            showScreen('quiz-screen');
+            renderQuestion();
+        }
+
+        // 渲染题目
+        function renderQuestion() {
+            const q = QUESTIONS[currentIdx];
+            document.getElementById('progress-text').innerText = `${currentIdx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('question-text').innerText = q.text;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-5 rounded-xl bg-purple-900/10 border border-purple-500/10 hover:bg-purple-800/20 hover:border-purple-500/40 transition-all group flex items-center gap-4";
+                btn.innerHTML = `
+                    <span class="text-[9px] font-serif text-purple-500/50">0${i+1}</span>
+                    <span class="text-sm tracking-widest text-purple-200/80 group-hover:text-white">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(opt.scores);
+                container.appendChild(btn);
+            });
+
+            // 控制返回按钮
+            document.getElementById('back-btn').style.opacity = currentIdx === 0 ? '0' : '1';
+            document.getElementById('back-btn').disabled = currentIdx === 0;
+        }
+
+        // 处理回答
+        function handleAnswer(scores) {
+            // 记录分数
+            for (let key in scores) userScores[key] += scores[key];
+            history.push(scores);
+
+            if (currentIdx < QUESTIONS.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        // 处理返回
+        function handleBack() {
+            if (currentIdx === 0) return;
+            const lastScores = history.pop();
+            for (let key in lastScores) userScores[key] -= lastScores[key];
+            currentIdx--;
+            renderQuestion();
+        }
+
+        // 计算并展示结果
+        function showResult() {
+            const mbti = [
+                userScores.I >= userScores.E ? 'I' : 'E',
+                userScores.N >= userScores.S ? 'N' : 'S',
+                userScores.F >= userScores.T ? 'F' : 'T',
+                userScores.J >= userScores.P ? 'J' : 'P'
+            ].join('');
+
+            const result = RESULTS[mbti] || RESULTS["INFJ"];
+            
+            document.getElementById('result-title').innerText = result.title;
+            document.getElementById('result-lyrics').innerText = `“${result.lyrics}”`;
+            document.getElementById('result-analysis').innerText = result.analysis;
+            
+            const linkBtn = document.getElementById('music-link');
+            if (result.link) {
+                linkBtn.href = result.link;
+                linkBtn.classList.remove('hidden');
+            } else {
+                linkBtn.classList.add('hidden');
+            }
+
+            showScreen('result-screen');
+        }
+    </script>
+</body>
+</html>
