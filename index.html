@@ -64,6 +64,16 @@
         #progress-bar {
             transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
+        /* 音乐图标旋转动画 */
+        .rotating {
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -121,7 +131,7 @@
                     <div class="w-4 h-4 rounded-full border border-purple-500/30 border-t-purple-500 animate-spin"></div>
                 </div>
                 
-                <!-- 题目内容容器，用于动画切换 -->
+                <!-- 题目内容容器 -->
                 <div id="question-content" class="flex flex-col flex-grow">
                     <h2 id="question-text" class="text-xl mb-auto font-serif leading-relaxed text-purple-100"></h2>
                     <div id="options-container" class="space-y-4 mt-8">
@@ -228,8 +238,8 @@
             ]},
             { id: 8, text: "若要挑选一句歌词作为妳生命观的注脚，妳会选择？", options: [
                 { text: "“我徒有手脚一双，却扛不起这天杀的大旗”", scores: { S: 2, T: 1, J: 2 } },
-                { text: "“因为享受着它的灿烂，因为忍受着它的腐烂”", scores: { N: 2, F: 2, P: 1 } },
-                { text: "“我是混世孽障活得坦荡，你快点躲开别挡了我的光”", scores: { E: 2, P: 2, T: 1 } },
+                { text: "“我不想愧对那晚星光，即使天从未亮，即使头顶高墙”", scores: { N: 2, F: 2, P: 1 } },
+                { text: "“我是混世孽障活得坦荡，妳快点躲开别挡了我的光”", scores: { E: 2, P: 2, T: 1 } },
                 { text: "“我这卑微又易碎的身躯，迎着真相而上咯”", scores: { I: 2, N: 2, J: 1 } }
             ]},
             { id: 9, text: "妳在梦中见到了一扇通往远古的窄门，门缝里溢出的是？", options: [
@@ -259,22 +269,97 @@
         ];
 
         const RESULTS = {
-            "INFJ": { title: "《南三环东路》", lyrics: "污泥啊，血肉啊，石头和大地也是你啊", analysis: "你是温良的守望者。你的灵魂里藏着一种慈悲，懂得“苦衷”的重量。在时间的河流里，你总是倾向于在怀念中寻找前行的力量。", link: "https://music.163.com/song?id=2052454512&uct2=U2FsdGVkX1+fcPp3TADl8fbcv/HcjABIIhJ4I6iNIHg=" },
-            "INFP": { title: "《如何》", lyrics: "像一颗流星划过天际，像一颗砂砾沉入海底", analysis: "你是荒原上最敏感的诗人。你的世界构建在极其私密的感官之上，那些未被说出口的歌词，才是你最真实的独白。你总能在破碎中嗅出一种异样的美。", link: "https://music.163.com/song?id=1818820554&uct2=U2FsdGVkX1802jrfpZjEQuhQyoot+KsXlE9sANr0C1I=" },
-            "ENFJ": { title: "《FEARLESS》", lyrics: "抬头看看啊，我不是孤星一颗", analysis: "你是坚定的理想主义者。你深知孤独的滋味，却永远不甘于成为“孤星”。在人际的旷野中，你总是在寻找并创造一种能将众生联结在一起的热望。", link: "https://music.163.com/song?id=1495719804&uct2=U2FsdGVkX1+rdIUzQscRvLty0Ki1awHzg87XHGxNP5o=" },
-            "ENFP": { title: "《嗵嗵》", lyrics: "来狂欢吧狂欢吧，永远不下坠", analysis: "你是永远热情的造梦者。你的生命逻辑是向上俯冲，拒绝在平庸中下坠。你渴望一场永不散场的狂欢，并在每一个鼓点里确认自己存在的意义。", link: "https://music.163.com/song?id=2712247628&uct2=U2FsdGVkX18OLfnkcXfHQRLwl//4n8lmppF1fHWHmlo=" },
-            "INTJ": { title: "《兰若度母》", lyrics: "众生万过皆因果，本是无争无灾祸", analysis: "你是清醒的觉察者。你相信“因果”的铁律，有着超然物外的理智。当你洞穿了“无争无灾”的本质后，你的每一步都走得极其精准且带着神圣的冷冽。", link: "https://music.163.com/song?id=1818820555&uct2=U2FsdGVkX1949yeWx51FstAFFajpW4wDOZMjCVDE3TE=" },
-            "INTP": { title: "《荒唐谣》", lyrics: "要烈火也要月光，烦请你了歌唱吧", analysis: "你是纯粹的思想者。你的一生都在试图调和“烈火”般的真相与“月光”般的虚幻。你不需要观众，只需在逻辑的歌唱中完成自我观测。", link: "https://music.163.com/song?id=3368793123&uct2=U2FsdGVkX18yJMUyfzF64od80/foOG6vcDb86bLOg4I=" },
-            "ENTJ": { title: "《超度我》", lyrics: "我把红线折折剪剪，落入凡间镜重圆", analysis: "你是果决的掌控者。你拥有修剪命运、整合破碎的意志。无论凡间如何杂乱，你始终相信可以靠自己的手脚，将残缺的生活重新拼凑成圆。", link: "https://music.163.com/song?id=1818820552&uct2=U2FsdGVkX1+hWZyyxAzcoOZ9BOXbmvmtpdm0JnXbtiM=" },
-            "ENTP": { title: "《心静自然凉》", lyrics: "我怒火中烧八百丈，你给我块糖我就自然凉", analysis: "你是戏谑的观察家。你用“怒火”消解严肃，又能在最戏剧性的时刻被一颗“糖”治愈。这种举重若轻的灵活，让你在任何困境下都能笑对荒诞。", link: "https://music.163.com/song?id=1818820556&uct2=U2FsdGVkX1+yRlo3XKuW1PdgL+RBLTl/x8I1G46qGwo=" },
-            "ISFJ": { title: "《马》", lyrics: "春天啊暖阳啊快些来吧 保全他一路上无风无浪", analysis: "你是沉默的守护者。你的爱意总是具象为“暖阳”与“保全”。你愿意付出极大的耐心，去抵御世界带给他人的风浪，在细碎的关怀中确立自我价值。", link: "https://music.163.com/song?id=1818819579&uct2=U2FsdGVkX1+10OHcZxk2lR9PGgfkWpHpTs1qe3Zotks=" },
-            "ISTJ": { title: "《春夏秋冬》", lyrics: "随着风随着雪随着花，随着星随着月随着她", analysis: "你是时序的忠实信徒。你相信“随着”的秩序感，在四季轮回中找寻恒常。你并不追求瞬间的爆发，而是希望在细水长流中承托住生命的底色。", link: "https://music.163.com/song?id=2613680870&uct2=U2FsdGVkX19QhJH1PDHPIxKRNMQHsjjuQur0pZelybg=" },
-            "ESFJ": { title: "《春暖花开去见你》", lyrics: "等到春暖艳阳天，你我就相见", analysis: "你是温暖的行动派。所有的等待都是为了那个“相见”的约定。你重视社会契约与情感联结，在春暖花开的圆满中，你能获得最踏实的安全感。", link: "https://music.163.com/song?id=1818820553&uct2=U2FsdGVkX1+cFpSEuR68hlQCX1AoCqc9xKyZgrbN+W0=" },
-            "ESTJ": { title: "《没咯》", lyrics: "我只要一双流泪的眼睛，看清我一路上所有罪过", analysis: "你是严苛的反思者。你并不惧怕“没咯”的虚无，你更害怕看不清自己的路径。那种对是非黑白的绝对要求，让你在纷繁世俗中始终保持着清澈的原则。", link: "https://music.163.com/song?id=1818820551&uct2=U2FsdGVkX18azOSdh7CvN4fSVYxmq16iZUuvbQHiGog=" },
-            "ISFP": { title: "《小小的眼泪》", lyrics: "只有你知晓的眼泪，从青空之上落下", analysis: "你是隐秘的艺术家。你对情感有着极强的共情，却只在“知晓”的一瞬间流露。你懂得“青空”之下的孤独，那是独属于你自己的极致感官体验。", link: "https://music.163.com/song?id=3312282300&uct2=U2FsdGVkX1819lx2dSpBQp023SkaigGW37S4ELd6UTA=" },
-            "ISTP": { title: "《可你听见了》", lyrics: "把天生的吝啬梦里的大火，赐予我求之不得", analysis: "你是冷酷的实干家。你将“梦里的大火”转化为现实的能量。你不需要过多的语言，当你意识到那些“求之不得”的真相时，你会用最直接的方式突围。", link: "https://music.163.com/song?id=2605274338&uct2=U2FsdGVkX19cL2Fy5ehwliss59Y3Dvh2EU/d3wT9e50=" },
-            "ESFP": { title: "《我用什么把你留住》", lyrics: "你一定要看到花开，你一定等燕子归来", analysis: "你是生命的热爱者。你追求极致的生机，“花开”与“燕归”是你活着的证据。哪怕最终无法留住任何东西，你也要在那个灿烂的过程中燃尽所有。", link: "https://music.163.com/song?id=1818819577&uct2=U2FsdGVkX1++DDp1GRI+I1GcqWSlQpXzPGz318fJXRI=" },
-            "ESTP": { title: "《最终观测》", lyrics: "我破碎的心脏，曾温柔地震荡", analysis: "你是勇敢的冒险家。你直面风暴，并将其视为一种归途。你习惯在各种感官的极限挑战中寻找自我，生命对你而言，就是一场最终的观测之旅。", link: "https://music.163.com/song?id=2093895545&uct2=U2FsdGVkX187DSORNT88URYU7AFtevfTXvoWakDj8jQ=" }
+            "INFJ": { title: "《南三环东路》", lyrics: "莫要哭 莫要怕\n走过了东路就到家", analysis: "妳是现实泥泞中的悲悯守望者。妳总想扛起理想的大旗，却常在‘面包与烂泥’的现实中感到精疲力竭。妳的灵魂深处藏着一种极度的责任感与对不堪世界的蔑视，在经历过深沉的悲伤后，妳终会看透‘血肉与大地’的本质，在慈悲中找到回家的路", link: "https://music.163.com/song?id=2052454512" },
+            "INFP": { 
+    title: "《如何》", 
+    lyrics: "像一颗流星划过天际\n像一颗砂砾沉入海底", 
+    analysis: "妳是荒原上最敏感的诗人。妳的世界构建在私密的感官之上，那些‘如何不再爱妳’的挣扎，是妳最真实的独白。妳曾相信勇气能换来天明，却在乌云遮蔽真心时选择像流星般坠落，或像沙砾般沉溺。妳总能在这种破碎与遗憾中，嗅出一种异样而永恒的美。", 
+    link: "https://music.163.com/song?id=1818820554" 
+},
+            "ENFJ": { 
+    title: "《FEARLESS》", 
+    lyrics: "抬头看看啊\n我不是孤星一颗", 
+    analysis: "妳是温柔的理想领航员。即便偏离航线，妳仍用尽全力爱着每一分秒。妳习惯将梦关进抽屉，独自承受痛楚以换取拥人入怀的风。妳深知孤独的重量，却拒绝成为孤星。当妳拭去温热清澈的泪，便能打碎枷锁，在破碎的希望中重拾无畏，指引灵魂闪耀如星辰花火。", 
+    link: "https://music.163.com/song?id=1495719804" 
+},
+            "ENFP": { 
+    title: "《嗵嗵》", 
+    lyrics: "神明神明张开嘴\n让我知道我是谁", 
+    analysis: "妳是永远热情的造梦者。妳的生命逻辑是向上俯冲，在尘埃与瓦砾堆上空轻盈掠过。即便背负黑夜，妳仍渴望一场永不下坠的狂欢，在灵魂破碎前寻找“我是谁”的终极答案。当沉重的骨头嗵一声落下，妳终能变回孩子，在万物生长的开花瞬间，随风流浪，安心飞翔。", 
+    link: "https://music.163.com/song?id=2712247628" 
+},
+            "INTJ": { 
+    title: "《兰若度母》", 
+    lyrics: "众生万过皆因果\n本是无争无灾祸", 
+    analysis: "妳是清醒的觉察者。妳深谙“众生万过皆因果”的闭环逻辑，在浑浊之花挂满青天时，唯有妳能俯首静候，于深海中静观彼岸。妳拥有穿透迷雾的理性，当世人因惶恐而奔跑时，妳早已看透寰宇万物的运行法则。妳身披理智的“蓝罗袍”，以金光般的洞察力既照亮绿丝绦，也直面污泥沼，在无争无灾的笃定中，完成对生命秩序的终极重构。", 
+    link: "https://music.163.com/song?id=1818820555" 
+},
+            "INTP": { 
+    title: "《荒唐谣》", 
+    lyrics: "我要独来 要众往\n要烈火也要月光", 
+    analysis: "妳是纯粹的思想者，在逻辑的荒野中追逐那天上的太阳。妳既渴望“烈火”般真理的灼烧，又贪恋“月光”般疏离的静谧。妳的一生都在试图见证那“身外身”，踏着火炭跨越迷惘之河，却在白石头叮当响时发现，热闹是众人的，而妳只属于这场孤独的颠簸。即便最终无人应妳而唱，妳也无妨在这荒唐的梦中梦里，衣襟飘荡，独自完成对真理的观测。", 
+    link: "https://music.163.com/song?id=3368793123" 
+},
+           "ENTJ": { 
+    title: "《超度我》", 
+    lyrics: "我把红线折折剪剪\n落入凡间镜重圆", 
+    analysis: "妳是果决的命运掌控者。即便面对“梦幻泡影”般的虚无与万千执念，妳也不甘于只做影心之下的随从。妳深知生命如露如电，却仍要在不生不灭的法相中，凭意志将命运的红线折折剪剪。妳从不回避那些“放不下”的野心与情感，而是选择在凡间的破碎中，亲手将镜面重圆。对妳而言，超度并非逃避，而是以最强硬的姿态掠过尘埃，在世界之初重塑属于妳的秩序。", 
+    link: "https://music.163.com/song?id=1818820552" 
+},
+            "ENTP": { 
+    title: "《心静自然凉》", 
+    lyrics: "我是混世孽障活得坦荡\n妳快点躲开别挡了我的光", 
+    analysis: "妳是戏谑人间的清醒观察家。妳扯下伪善的温良甩在地上，宁愿做个“活得坦荡”的混世孽障，也不愿在衣冠楚楚中忘了遮羞。妳敢说敢做，在大步流星赴向森罗殿的路上，用嚣张的乱梦解构权威。妳并不愤世嫉俗，只是看透了清浊自分辨的逻辑。即便怒火中烧八百丈，只要生活给妳一点甜头，妳就能瞬间“自然凉”，在荒诞的世俗里完成一场洋洋洒洒的突围。", 
+    link: "https://music.163.com/song?id=1818820556" 
+},
+            "ISFJ": { 
+    title: "《马》", 
+    lyrics: "春天啊暖阳啊快些来吧\n保全他一路上无风无浪", 
+    analysis: "妳是这世间最沉默也最坚韧的守护者。即便自己早已满目痍疮，妳仍会在谢幕时光里卸下所有伪装，只为目送那匹“白马”悠然远去。妳习惯收起自己的哭声与响动，将所有的爱意化作对季节的祈求——愿春天与暖阳能代妳保全那个曾由妳带回家的人。这种不求回应的慈悲，让妳在目送对方无风无浪的一路上，完成了一种近乎神圣的自我成全。", 
+    link: "https://music.163.com/song?id=1818819579" 
+},
+            "ISTJ": { 
+    title: "《春夏秋冬》", 
+    lyrics: "随着风 随着雪 随着花\n随着星 随着月 随着她", 
+    analysis: "妳是时序的忠实信徒。在繁花开遍与冰封瞬息的轮回中，妳习惯以一种近乎修行的姿态，在四季的经纬度里找寻恒常的秩序。妳并不追求瞬间的爆发，而是相信那一颗“等了又等”的心。对妳而言，生活不是盲目的奔赴，而是随着星月与风雪，在每一个既定的时刻精准落座。这种克制而深刻的厚重感，让妳在无声的岁月里，成为了承托起生命底色最稳固的基石。", 
+    link: "https://music.163.com/song?id=2613680870" 
+},
+            "ESFJ": { 
+    title: "《春暖花开去见妳》", 
+    lyrics: "等到春暖艳阳天\n妳我就相见", 
+    analysis: "妳是温暖的行动派，也是守候约定的坚韧灵魂。即便在人海中匆忙告别，妳依然相信“再见并不远”。妳习惯用想念去对抗阴霾，相信思念能让乌云散去、星星复燃。妳重视每一份情感契约，在悲伤星球转动的每一圈里，妳都在不顾一切地奔向那个“如约出现”的光点。这种对圆满相见的执着，让妳在春暖艳阳天里，能获得最踏实、最灿烂的安全感。", 
+    link: "https://music.163.com/song?id=1818820553" 
+},
+            "ESTJ": { 
+    title: "《没咯》", 
+    lyrics: "我只要一双流泪的眼睛\n看清我一路上所有罪过", 
+    analysis: "妳是严苛的现实主义者，也是迎着真相而上的孤勇者。在“迷惑而又奔波”的一生中，妳从不乞求命运的怜悯，而是选择用卑微易碎的身躯去硬抗无休止的重拳。妳对秩序与真相有着近乎偏执的追求，哪怕自省的过程伴随着“长长的哀咏”与沉重的泪水。对妳而言，重生不在于规避痛苦，而在于粉碎懦弱后的意志重构。即使前方没有归途，妳也会在透亮的白日下，坚定地走完这条属于自己的审判之路。", 
+    link: "https://music.163.com/song?id=1818820551" 
+},
+            "ISFP": { 
+    title: "《小小的眼泪》", 
+    lyrics: "只有妳知晓的眼泪\n从青空之上落下", 
+    analysis: "妳是隐秘而纯粹的艺术家，灵魂里染着旧时的颜色。妳习惯在明媚的角落里自我放逐，让那颗“落灰的心”在梦境与现实的边缘独自旅行。妳对痛苦与美有着天生的敏感，那些深埋的瞬间总是在妳指间闪耀。妳或许曾想被世界忘记，却在破碎时刻渴望被精准地拾起。当那一颗“小小的眼泪”从青空落下，那是妳对命运最炙烈的回答——在被拥入怀里的瞬间，妳终于敢于让生锈的心，长出比昨日更灿烂的明天。", 
+    link: "https://music.163.com/song?id=3312282300" 
+},
+            "ISTP": { 
+    title: "《可妳听见了》", 
+    lyrics: "把天生的吝啬 梦里的大火\n赐予我 求之不得", 
+    analysis: "妳是冷峻的实干家，也是在暴雨前奔赴深渊的独行者。妳将“天生的吝啬”化作对抗平庸的盔甲，却在“梦里的大火”中灼烧着求之不得的真相。妳习惯于沉默地观察天上的寂静与地上的罪恶，在子弹上膛与火光跳动间寻觅生存的逻辑。妳不需要过多的宽恕或言语，当风亲吻妳时，妳会用最直接的方式突围，在星星落满双眼的刹那，完成属于自己的最终自由。", 
+    link: "https://music.163.com/song?id=2605274338" 
+},
+            "INFP": { 
+    title: "《我用什么把妳留住》", 
+    lyrics: "因为享受着它的灿烂\n因为忍受着它的腐烂", 
+    analysis: "妳是荒原上最敏感的诗人。妳的生命逻辑构建在极致的感官之上，在“别爱”与“依依不舍”的挣扎中，独自品尝苦涩如歌的岁月。妳习惯在至暗时刻手握星火静默，忍受着万物的腐烂，却又誓死为了“花开与燕归”的瞬间而存在。这种在破碎中寻找璀璨的偏执，让妳即便被时间击破，仍愿在这浩瀚星河中闪着光坠落，完成一场对生命最深情的挽留。", 
+    link: "https://music.163.com/song?id=1818819577" 
+},
+            "ESTP": { 
+    title: "《最终观测》", 
+    lyrics: "我破碎的心脏\n曾温柔地震荡", 
+    analysis: "妳是天生的冒险家与观测者。在“大风暴”来临前的最后三十三秒，妳拒绝逃避，而是选择坐看月亮呼啸，在极致的危险中品味温柔。妳拥有一颗即便破碎也依然能“温柔震荡”的心脏，在每一次跌倒与狂笑中，妳精准地捕捉着生命最真实的触感。妳深信“循此苦旅，以达天际”，当一切尘埃落定时，妳只需顺其自然地在那场冲昏头脑的拥抱中，完成对世界最后的、也是最炽热的观测。", 
+    link: "https://music.163.com/song?id=2093895545" 
+}
         };
 
         // 状态变量
@@ -299,13 +384,24 @@
                 musicBtn.classList.remove('opacity-0');
             }
             showScreen('quiz-screen');
-            renderQuestion();
+            renderQuestion(true); 
         }
 
         // 渲染题目
         function renderQuestion(isFirst = false) {
             const q = QUESTIONS[currentIdx];
+            const content = document.getElementById('question-content');
+            
+            if (!isFirst) {
+                content.classList.remove('slide-out');
+                content.classList.add('slide-in');
+                setTimeout(() => content.classList.remove('slide-in'), 500);
+            }
+
+            const progress = ((currentIdx + 1) / QUESTIONS.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
             document.getElementById('progress-text').innerText = `${currentIdx + 1} / ${QUESTIONS.length}`;
+            
             document.getElementById('question-text').innerText = q.text;
             
             const container = document.getElementById('options-container');
@@ -330,16 +426,23 @@
 
         // 处理回答
         function handleAnswer(scores) {
-            // 记录分数
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const content = document.getElementById('question-content');
+            content.classList.add('slide-out');
+
             for (let key in scores) userScores[key] += scores[key];
             history.push(scores);
 
-            if (currentIdx < QUESTIONS.length - 1) {
-                currentIdx++;
-                renderQuestion();
-            } else {
-                showResult();
-            }
+            setTimeout(() => {
+                if (currentIdx < QUESTIONS.length - 1) {
+                    currentIdx++;
+                    renderQuestion();
+                } else {
+                    showResult();
+                }
+            }, 350);
         }
 
         // 处理返回
